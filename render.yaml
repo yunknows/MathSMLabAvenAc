@@ -1,0 +1,24 @@
+# This deploys the actual Node.js application, not a static GitHub Pages site.
+# PAID hosting and a persistent disk are required. Review pricing before deploying.
+services:
+  - type: web
+    name: math-sm-lab
+    runtime: node
+    plan: 0.5c-512mb
+    numInstances: 1
+    buildCommand: node --check server.mjs && node --check lessons.mjs && node --check public/app.js && node --check public/lessons-ui.js
+    startCommand: node server.mjs
+    healthCheckPath: /
+    envVars:
+      - key: NODE_VERSION
+        value: "24"
+      - key: HOST
+        value: "0.0.0.0"
+      - key: SECURE_COOKIES
+        value: "true"
+      - key: DB_PATH
+        value: /var/data/math.sqlite
+    disk:
+      name: math-sm-lab-data
+      mountPath: /var/data
+      sizeGB: 1
